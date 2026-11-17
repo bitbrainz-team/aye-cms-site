@@ -1,0 +1,66 @@
+name: Deploy landing page and demos
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      pages: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://npm.pkg.github.com
+          scope: '@bitbrainz-team'
+      - uses: actions/configure-pages@v5
+        id: pages
+      - name: Install site and demo dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+      - name: Build site and demos
+        env:
+          PAGES_ORIGIN: ${{ steps.pages.outputs.origin }}
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          PUBLIC_CMS_API_URL: ${{ vars.CMS_API_URL }}
+          PUBLIC_CMS_SITE_ID: ${{ vars.CMS_SITE_ID }}
+          NEXT_PUBLIC_CMS_API_URL: ${{ vars.CMS_API_URL }}
+          NEXT_PUBLIC_CMS_SITE_ID: ${{ vars.NEXTJS_DEMO_SITE_ID }}
+          VITE_CMS_API_URL: ${{ vars.CMS_API_URL }}
+          VITE_CMS_SITE_ID: ${{ vars.VITE_DEMO_SITE_ID }}
+        run: npm run build:pages
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment

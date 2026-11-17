@@ -1,0 +1,10 @@
+node_modules/
+.next/
+.astro/
+dist/
+/demos/nextjs/out/
+next-env.d.ts
+*.tsbuildinfo
+.env*
+!.env.example
+.DS_Store

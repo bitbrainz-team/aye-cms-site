@@ -1,0 +1,194 @@
+---
+import { Content, frontmatter } from '../content/home.md';
+import '../styles/landing.css';
+
+const hostedEditor = import.meta.env.PUBLIC_CMS_API_URL && import.meta.env.PUBLIC_CMS_SITE_ID;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const contact = 'mailto:team@bitbrainz.com?subject=Aye%20CMS%20inquiry';
+function demoUrl(path: string, port: number) {
+  return import.meta.env.DEV ? `http://127.0.0.1:${port}/?admin` : `${base}/demos/${path}/?admin`;
+}
+
+const demos = [
+  { framework: 'Next.js', description: 'A Next.js App Router site published as a static export.', path: 'nextjs', mark: 'N', url: demoUrl('nextjs', 3001) },
+  { framework: 'Vanilla + Vite', description: 'An HTML and TypeScript site with the same browser editor.', path: 'vite', mark: 'V', url: demoUrl('vite', 5173) },
+];
+const steps = [
+  { title: 'Open Admin', description: 'Sign in with GitHub on Free or enter your editor access code on a paid plan.' },
+  { title: 'Describe the edit', description: 'Ask for a change in your own words. Review the proposed Markdown draft in the sidebar.' },
+  { title: 'Review and merge', description: 'Hand off the edit or open a draft pull request, depending on your plan. A maintainer merges the change in GitHub.' },
+];
+const plans = [
+  { name: 'Free', price: 0, drafts: 20, description: 'Draft changes for one public GitHub repo.', details: ['GitHub sign-in for editors', 'Copy Markdown or download a patch', 'No GitHub App installation'] },
+  { name: 'Starter', price: 29, drafts: 250, description: 'Edit one private GitHub repo from your site.', details: ['Editor access codes', 'Open draft pull requests from the editor', 'Dedicated Worker for your site'] },
+  { name: 'Pro', price: 79, drafts: 500, description: 'Manage up to three private GitHub repos.', details: ['Editor access codes', 'Open draft pull requests from the editor', 'Dedicated Worker for each site'] },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={frontmatter.description} />
+    <title>Aye CMS · AI editing for Git-backed websites</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:wght@400..700&display=swap" rel="stylesheet" />
+  </head>
+  <body data-bitbrainz-entry="src/content/home.md">
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="top">
+      <div class="wrap top-inner">
+        <a class="brand" href={`${base}/`}><span class="brand-mark" aria-hidden="true">A</span> Aye <span>CMS</span></a>
+        <nav aria-label="Main navigation">
+          <a href="#workflow">How it works</a>
+          <a href="#frameworks">Frameworks</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#contact">Contact</a>
+          {hostedEditor && <a href="?admin">Admin</a>}
+        </nav>
+        <a class="button outline nav-demo" href="#demo">Try the demo <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+    <main id="main">
+      <section class="hero wrap">
+        <div class="hero-copy">
+          <p class="eyebrow"><span aria-hidden="true"></span> AI editing for Git-backed sites</p>
+          <h1>{frontmatter.title}</h1>
+          <p class="lede">{frontmatter.description}</p>
+          <div class="actions">
+            <a class="button primary" href="#demo">Try the demo <span aria-hidden="true">↗</span></a>
+            <a class="button outline" href={contact}>Get in touch</a>
+          </div>
+          <p class="fine">Browse the demo sites freely. Hosted editing uses GitHub sign-in.</p>
+        </div>
+        <figure class="product">
+          <div class="browser-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="address">your-site.com/?admin</span></div>
+          <div class="product-grid">
+            <div class="sample-page">
+              <div class="sample-brand">FIELDWORK <span>STUDIO</span></div>
+              <div class="sample-art" aria-hidden="true"><span></span><span></span><span></span></div>
+              <p class="sample-title">Visit the studio</p>
+              <p class="sample-hours">Saturdays, 10 a.m.–4 p.m.</p>
+            </div>
+            <div class="sample-panel">
+              <div class="sample-panel-title">Admin <span aria-hidden="true">×</span></div>
+              <p class="sample-prompt">Update the Saturday hours to 10 a.m.–4 p.m.</p>
+              <div class="sample-draft"><strong>Draft preview</strong><p>Saturdays, 10 a.m.–4 p.m.</p></div>
+              <div class="sample-publish">Open draft pull request <span aria-hidden="true">↗</span></div>
+            </div>
+          </div>
+          <figcaption>Illustration of the planned private-repo workflow</figcaption>
+        </figure>
+      </section>
+
+      <section class="workflow wrap" id="workflow">
+        <div class="section-head"><p class="eyebrow">Planned workflow</p><h2>From a request to a reviewed change.</h2></div>
+        <ol class="step-grid">
+          {steps.map(({ title, description }, index) => (
+            <li><span class="step-number" aria-hidden="true">{index + 1}</span><h3>{title}</h3><p>{description}</p></li>
+          ))}
+        </ol>
+        <div class="ownership"><Content /></div>
+      </section>
+
+      <section class="demo-section" id="demo">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="eyebrow">Interactive demo</p>
+            <h2>Try an edit yourself.</h2>
+            <p>Browse either demo site. On a connected deployment, sign in with an approved GitHub account, ask for an AI draft, and export the change for review.</p>
+          </div>
+          <div class="demo-frame">
+            <div class="browser-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="address">Hello World · Vite</span></div>
+            <div class="demo-start">
+              <div>
+                <h3>Hello World</h3>
+                <p>Both demos render the same Aye CMS setup checklist from Markdown.</p>
+                <a class="button primary" href={demos[1].url}>Open the Vite demo <span aria-hidden="true">↗</span></a>
+              </div>
+            </div>
+          </div>
+          <p class="fine">Drafts leave the page unchanged until a maintainer merges the edit.</p>
+        </div>
+      </section>
+
+      <section class="wrap section" id="frameworks">
+        <div class="section-head">
+          <p class="eyebrow">Frameworks</p><h2>Keep your frontend.</h2>
+          <p>Astro, Next.js, and vanilla Vite all mount the same browser editor. Hosted editing works with Markdown stored in a registered GitHub repo.</p>
+        </div>
+        <div class="card-grid">
+          <article class="card"><span class="framework-mark astro" aria-hidden="true">A</span><h3>Astro</h3><p>This landing page uses Astro and renders its copy from Markdown.</p><a href="#workflow">See how it works <span aria-hidden="true">↗</span></a></article>
+          {demos.map(({ framework, description, path, mark, url }) => (
+            <article class="card"><span class:list={['framework-mark', path]} aria-hidden="true">{mark}</span><h3>{framework}</h3><p>{description}</p><a href={url}>Open {framework} demo <span aria-hidden="true">↗</span></a></article>
+          ))}
+        </div>
+      </section>
+
+      <section class="pricing section" id="pricing">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="eyebrow">Proposed launch pricing</p>
+            <h2>Start free with a public repo.</h2>
+            <p>Connect a private repo when you need a dedicated Worker and want to open draft pull requests from the sidebar. Prices are in USD.</p>
+          </div>
+          <div class="price-grid">
+            {plans.map(({ name, price, drafts, description, details }) => (
+              <article class:list={['card', 'price-card', { hosted: name === 'Starter' }]}>
+                <h3>{name}</h3>
+                <p class="price">${price} <span>/ month</span></p>
+                <p>{description}</p>
+                <p class="allowance"><strong>{drafts} AI draft requests</strong> {name === 'Pro' ? 'per site per month' : 'per month'}</p>
+                <ul>{details.map((detail) => <li>{detail}</li>)}</ul>
+                <a
+                  class:list={['button', name === 'Starter' ? 'primary' : 'outline']}
+                  href={`mailto:team@bitbrainz.com?subject=${encodeURIComponent(`Aye CMS ${name} inquiry`)}`}
+                >Ask about {name} <span aria-hidden="true">↗</span></a>
+              </article>
+            ))}
+          </div>
+          <p class="plan-note">Each new AI draft or revision counts as one request. A maintainer merges changes in GitHub on every plan. <a href="#demo">Browse the demo sites</a>.</p>
+        </div>
+      </section>
+
+      <section class="wrap section faq">
+        <div class="section-head"><p class="eyebrow">FAQ</p><h2>Before you connect a site.</h2></div>
+        <div>
+          <details><summary>Do editors need a GitHub account?</summary><p>Free editors sign in with GitHub and hand off the exported change. Starter and Pro editors use access codes and can edit without GitHub accounts. A maintainer installs the GitHub App for private repository access.</p></details>
+          <details><summary>What can the hosted editor change?</summary><p>The hosted editor drafts Markdown content and frontmatter. Local development uses a separate coding-agent bridge to edit templates, components, and other source files.</p></details>
+          <details><summary>Where does the content live?</summary><p>Approved changes are Git commits. Your own build and hosting continue to serve the site.</p></details>
+        </div>
+      </section>
+
+      <section class="contact wrap" id="contact">
+        <div><p class="eyebrow">Contact</p><h2>Tell us about your site.</h2><p>Share your framework, where the site is hosted, and what your team needs to edit.</p></div>
+        <a class="button primary" href={contact}>team@bitbrainz.com <span aria-hidden="true">↗</span></a>
+      </section>
+    </main>
+    <footer class="wrap footer"><a class="brand" href={`${base}/`}><span class="brand-mark" aria-hidden="true">A</span> Aye CMS</a><a href={contact}>Contact</a></footer>
+    <script>
+      const apiUrl = import.meta.env.PUBLIC_CMS_API_URL;
+      const siteId = import.meta.env.PUBLIC_CMS_SITE_ID;
+      const admin = new URLSearchParams(location.search).has('admin');
+      if (apiUrl && siteId && admin) {
+        void import('@bitbrainz-team/aye-cms/hosted-editor').then(({ mountHostedEditor }) => {
+          mountHostedEditor({
+            siteId,
+            apiUrl,
+            onClose() {
+              const url = new URL(location.href);
+              url.searchParams.delete('admin');
+              history.replaceState(history.state, '', url);
+            },
+          });
+        });
+      } else if (import.meta.env.DEV && !(apiUrl && siteId)) {
+        void import('@bitbrainz-team/aye-cms/visual-editor').then(({ mountVisualEditor }) => {
+          const unmount = mountVisualEditor({ open: admin });
+          import.meta.hot?.dispose(unmount);
+        });
+      }
+    </script>
+  </body>
+</html>
